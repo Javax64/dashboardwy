@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="{% static 'assets/plugins/vectormap/jquery-jvectormap-2.0.2.css' %} " rel="stylesheet"/>
+{% endblock css %}
+    
+
+{% block content %}
+
+              
+    <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-2 row-cols-xxl-4">
+      <div class="col">
+        <div class="card overflow-hidden radius-10">
+            <div class="card-body">
+             <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
+              <div class="w-50">
+                <p>Nro Ventas</p>
+                <h4 class="">{{numero_ventas}}</h4>
+              </div>
+              <div class="w-50">
+                <p class="mb-3 float-end {% if porcentaje_cambio > 0 %}text-success{% elif porcentaje_cambio < 0 %}text-danger{% else %}text-muted{% endif %}">
+                  {% if porcentaje_cambio > 0 %}
+                     + {{ porcentaje_cambio }}% <i class="bi bi-arrow-up"></i>
+                  {% elif porcentaje_cambio < 0 %}
+                     {{ porcentaje_cambio }}% <i class="bi bi-arrow-down"></i>
+                  {% else %}
+                    {{ porcentaje_cambio }}%
+                  {% endif %}
+                </p>
+                 <div id="chart1" data-revenue="{{ cantidad_ventas_data|safe }}"></div>
+                
+              </div>
+             
+            </div>
+          </div>
+          
+        </div>
+        
+       </div>
+       <div class="col">
+        <div class="card overflow-hidden radius-10">
+            <div class="card-body">
+             <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
+              <div class="w-50">
+                <p>Ganancias Ventas</p>
+                <h4 class=""> Bs. {{total_ventas}}</h4>
+              </div>
+              <div class="w-50">
+                <p class="mb-3 float-end {% if porcentaje_cambio_ganancia > 0 %}text-success{% elif porcentaje_cambio_ganancia < 0 %}text-danger{% else %}text-muted{% endif %}">
+                  {% if porcentaje_cambio_ganancia > 0 %}
+                    + {{ porcentaje_cambio_ganancia }}% <i class="bi bi-arrow-up"></i>
+                  {% elif porcentaje_cambio_ganancia < 0 %}
+                     {{ porcentaje_cambio_ganancia }}% <i class="bi bi-arrow-down"></i>
+                  {% else %}
+                    {{ porcentaje_cambio_ganancia }}%
+                  {% endif %}
+                </p>
+                 <div id="chart2" data-revenue="{{ revenue_data|safe }}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+       </div>
+       <div class="col">
+        <div class="card overflow-hidden radius-10">
+            <div class="card-body">
+             <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
+              <div class="w-50">
+                <p>Nro Pedidos</p>
+                <h4 class="">{{numero_pedidos}}</h4>
+              </div>
+              <div class="w-50">
+                <p class="mb-3 float-end {% if porcentaje_cambio_pedidos > 0 %}text-success{% elif porcentaje_cambio_pedidos < 0 %}text-danger{% else %}text-muted{% endif %}">
+                  {% if porcentaje_cambio_pedidos > 0 %}
+                    + {{ porcentaje_cambio_pedidos }}% <i class="bi bi-arrow-up"></i>
+                  {% elif porcentaje_cambio_pedidos < 0 %}
+                     {{ porcentaje_cambio_pedidos }}% <i class="bi bi-arrow-down"></i>
+                  {% else %}
+                    {{ porcentaje_cambio_pedidos }}%
+                  {% endif %}
+                </p>
+                 <div id="chart3" data-revenue="{{ cantidad_pedidos_data|safe }}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+       </div>
+       <div class="col">
+        <div class="card overflow-hidden radius-10">
+            <div class="card-body">
+             <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
+              <div class="w-50">
+                <p>Ganancias Pedidos</p>
+                <h4 class="">{{total_pedidos_dia}}</h4>
+              </div>
+              <div class="w-50">
+                <p class="mb-3 float-end {% if porcentaje_cambio_ganancia_pedidos > 0 %}text-success{% elif porcentaje_cambio_ganancia_pedidos < 0 %}text-danger{% else %}text-muted{% endif %}">
+                  {% if porcentaje_cambio_ganancia_pedidos > 0 %}
+                     + {{ porcentaje_cambio_ganancia_pedidos }}% <i class="bi bi-arrow-up"></i>
+                  {% elif porcentaje_cambio_ganancia_pedidos < 0 %}
+                     {{ porcentaje_cambio_ganancia_pedidos }}% <i class="bi bi-arrow-down"></i>
+                  {% else %}
+                    {{ porcentaje_cambio_ganancia_pedidos }}%
+                  {% endif %}
+                </p>
+                 <div id="chart4" data-revenue="{{ ganancias_pedidos_data|safe }}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+       </div>
+    </div><!--end row-->
+
+    <div class="row">
+      <div class="col-12 col-lg-6 d-flex">
+        <div class="card radius-10 w-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <h6 class="mb-0">Ganancias Ventas</h6>
+              <div class="fs-5 ms-auto dropdown">
+                 <div class="dropdown-toggle dropdown-toggle-nocaret cursor-pointer" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></div>
+                   <ul class="dropdown-menu">
+                     <li><a class="dropdown-item" href="#">Action</a></li>
+                     <li><a class="dropdown-item" href="#">Another action</a></li>
+                     <li><hr class="dropdown-divider"></li>
+                     <li><a class="dropdown-item" href="#">Something else here</a></li>
+                   </ul>
+               </div>
+             </div>
+             
+             <div id="chart5" data-revenue="{{ revenue_data|safe }}"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6 d-flex">
+        <div class="card radius-10 w-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <h6 class="mb-0">Ganancias Pedidos</h6>
+              <div class="fs-5 ms-auto dropdown">
+                 <div class="dropdown-toggle dropdown-toggle-nocaret cursor-pointer" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></div>
+                   <ul class="dropdown-menu">
+                     <li><a class="dropdown-item" href="#">Action</a></li>
+                     <li><a class="dropdown-item" href="#">Another action</a></li>
+                     <li><hr class="dropdown-divider"></li>
+                     <li><a class="dropdown-item" href="#">Something else here</a></li>
+                   </ul>
+               </div>
+             </div>
+             
+             <div id="chart15" data-revenue="{{ ganancias_pedidos_data|safe }}"></div>
+          </div>
+        </div>
+      </div>
+      
+    </div><!--end row-->
+    <div class="row">
+      <div class="col-12 col-lg-6 d-flex">
+        <div class="card radius-10 w-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <h6 class="mb-0">Numero Ventas</h6>
+              <div class="fs-5 ms-auto dropdown">
+                 <div class="dropdown-toggle dropdown-toggle-nocaret cursor-pointer" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></div>
+                   <ul class="dropdown-menu">
+                     <li><a class="dropdown-item" href="#">Action</a></li>
+                     <li><a class="dropdown-item" href="#">Another action</a></li>
+                     <li><hr class="dropdown-divider"></li>
+                     <li><a class="dropdown-item" href="#">Something else here</a></li>
+                   </ul>
+               </div>
+             </div>
+             
+             <div id="chart17" data-revenue="{{ cantidad_ventas_data|safe }}"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6 d-flex">
+        <div class="card radius-10 w-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <h6 class="mb-0">Numero Pedidos</h6>
+              <div class="fs-5 ms-auto dropdown">
+                 <div class="dropdown-toggle dropdown-toggle-nocaret cursor-pointer" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></div>
+                   <ul class="dropdown-menu">
+                     <li><a class="dropdown-item" href="#">Action</a></li>
+                     <li><a class="dropdown-item" href="#">Another action</a></li>
+                     <li><hr class="dropdown-divider"></li>
+                     <li><a class="dropdown-item" href="#">Something else here</a></li>
+                   </ul>
+               </div>
+             </div>
+             
+             <div id="chart16" data-revenue="{{ cantidad_pedidos_data|safe }}"></div>
+          </div>
+        </div>
+      </div>
+      
+    </div><!--end row-->
+
+    
+    
+
+ 
+
+{% endblock content %}
+
+
+
+
+{% block js %}
+
+
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+
+<script src="{% static 'assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js' %}"></script>
+  <script src="{% static 'assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+<script src="{% static 'assets/plugins/chartjs/js/Chart.min.js' %} "></script>
+<script src="{% static 'assets/plugins/chartjs/js/Chart.extension.js' %}"></script>
+<script src="{% static 'assets/plugins/apexcharts-bundle/js/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/js/index3.js' %} "></script>
+
+{% endblock js %}
+    

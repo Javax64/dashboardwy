@@ -1,0 +1,145 @@
+
+{% extends "base_usuario.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{% endblock css %}
+    
+{% block content %}
+<div class="row">
+<div class="col-12 col-lg-12 d-flex">
+  <div class="card w-100">
+   <div class="card-header py-3">
+    <div class="card-body">
+        <h3 class="cell" style="text-align: center;">Ultimas Ventas Registradas</h3>
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead class="table-light">
+            <tr>
+                <th>Nomero</th>
+                <th>Fecha</th>
+                <th>Cantidad Productos</th>
+                <th>Monto Total</th>
+                <th>Anular</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for venta in ventas %}
+                        
+            <tr>
+                <td>{{venta.id}}</td>
+                  <td>{{venta.date_sale}}</td>
+                  <td>{{venta.count}}</td>
+                  <td>Bs. {{venta.amount}}</td>
+                <td>
+                  
+
+                    <form method="POST" action ="{% url 'venta_app:venta-anulate' pk=venta.id %}">
+                        {% csrf_token %}
+                        <button type="button" style="all: unset; cursor: pointer;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{venta.id}}">
+                            <a class="text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar">
+                                <i class="bi bi-trash-fill"></i>eliminar
+                            </a>
+                        </button>
+                        <div class="modal fade" id="exampleModal{{venta.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">¿Está Seguro de eliminar la venta?</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="card cell">
+                                            <div class="card-divider">
+                                                <h3>Monto: {{ venta.amount }}</h3>
+                                            </div>
+                                            <div class="card-section">
+                                                <h4>ID: {{ venta.id }}</h4>
+                                                <p>FECHA: {{ venta.date_sale }}</p>
+                                                <p>CANTIDAD PRODUCTOS: {{ venta.count }}</p>
+                                                <p>TIPO DE PAGO: {{ venta.get_type_payment_display }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <button type="submit" class="btn btn-primary">Sí</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </td>
+            
+            </tr>
+            {% endfor %}
+            
+          </tbody>
+        </table>
+      </div>
+      
+    </div>
+          
+    
+            
+         
+  </div>
+  
+</div>
+
+
+
+
+
+
+
+   
+   
+
+
+          
+   
+
+
+
+
+
+{% endblock content %}
+
+
+
+
+{% block js %}
+<script src="https://unpkg.com/@zxing/library@0.18.6/umd/index.js"></script>
+<script src="{% static 'mis_js/scannerVenta.js' %}" ></script>
+
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+{% endblock js %}
+    

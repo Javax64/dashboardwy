@@ -1,0 +1,453 @@
+
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
+
+{% endblock css %}
+    
+{% block content %}
+<div class="card border shadow-none">
+    <form method="GET">
+    <div class="card-header py-3"> 
+        <h4>Administracion Pedidos</h4>
+        <div class="row g-3 align-items-center">
+          
+          <div class="col-lg-2 col-md-6 me-auto">
+            <label class="form-label">nombre de usuario</label>
+            {{form.userId}}
+          </div>
+          <div class="col-lg-2 col-6 col-md-3">
+            
+              <label class="form-label">Fecha Inicio</label>
+              {{form.date_start}}
+            
+          </div>
+          <div class="col-lg-2 col-6 col-md-3">
+            
+            <label class="form-label">Fecha Fin</label>
+            {{form.date_end}}
+          
+        </div>
+          <div class="col-lg-2 col-6 col-md-3">
+            <label class="form-label">Tipo</label>
+            <select class="form-select" name="estado" id="estado">
+              <option>Seleccion</option>
+            <option value="Todas">Todas</option>
+            <option value="Entregados">Entregados</option>
+            <option value="Pendientes">Pendientes</option>
+            <option value="Anulados">Anulados</option>
+            
+              
+            </select>
+          </div>
+          <div class="col-lg-2 col-6 col-md-3">
+            <label class="form-label">Tipo</label>
+            <select class="form-select" name="pago" id="pago">
+              <option>Seleccion</option>
+              <option value="Tienda">Todas</option>
+            <option value="0">Transferencia</option>
+            <option value="1">Efectivo</option>
+              
+            </select>
+          </div>
+          <div class="col-lg-2 col-6 col-md-3">
+            {{form.filtro_fecha}}
+            <button class="btn btn-info px-5 radius-30" type="submit">Filtrar</button>
+            
+          </div>
+        </form>
+  <div class="card-header py-2">
+    <div class="row g-2">
+      <!-- Agrupación de los dos primeros elementos -->
+      <div class="col-12 col-lg-6 d-flex flex-wrap gap-2">
+        <!-- Columna 1 -->
+        <div class="card flex-grow-1 radius-10 bg-primary">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div>
+                <p class="mb-1 text-white text-truncate small">Cantidad de Pedidos</p>
+                <h4 class="mb-0 text-white">Nº {{ num_ventas_hoy }}</h4>
+              </div>
+              <div class="ms-auto widget-icon bg-white-1 text-white">
+                <i class="bi bi-bag-check-fill fs-3"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+ 
+      </div>
+      
+      
+      <!-- Columna 3 -->
+      <div class="col-12 col-lg-6">
+        <div class="card radius-10 bg-success">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div>
+                <p class="mb-1 text-white text-truncate small">Ganancia de Pedidos</p>
+                <h4 class="mb-0 text-white">Bs. {{ total_vendido }}</h4>
+              </div>
+              <div class="ms-auto widget-icon bg-white-1 text-white">
+                <i class="bi bi-currency-dollar fs-3"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row g-2">
+        <div class="col-12 col-lg-3 ">
+            <div class="card radius-10 border-0 border-start border-tiffany  border-3">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="">
+                    <p class="mb-1">Transferencia SALDO</p>
+                    <h4 class="mb-0 text-tiffany ">Bs. {{total_transferencia_saldo}}</h4>
+                  </div>
+                  <div class="ms-auto widget-icon bg-tiffany  text-white">
+                    <i class="bi bi-currency-dollar"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+    
+          </div>
+          
+          <div class="col-12 col-lg-3 ">
+            <div class="card radius-10 border-0 border-start border-success border-3">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="">
+                    <p class="mb-1">Efectivo SALDO</p>
+                    <h4 class="mb-0 text-success">Bs. {{total_efectivo_saldo}}</h4>
+                  </div>
+                  <div class="ms-auto widget-icon bg-success text-white">
+                    <i class="bi bi-currency-dollar"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+          </div>
+          <div class="col-12 col-lg-3 ">
+            <div class="card radius-10 border-0 border-start border-tiffany  border-3">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="">
+                    <p class="mb-1">Transferencia ADELANTO</p>
+                    <h4 class="mb-0 text-tiffany ">Bs. {{total_transferencia}}</h4>
+                  </div>
+                  <div class="ms-auto widget-icon bg-tiffany  text-white">
+                    <i class="bi bi-currency-dollar"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+    
+          </div>
+          
+          <div class="col-12 col-lg-3 ">
+            <div class="card radius-10 border-0 border-start border-success border-3">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="">
+                    <p class="mb-1">Efectivo ADELANTO</p>
+                    <h4 class="mb-0 text-success">Bs. {{total_efectivo}}</h4>
+                  </div>
+                  <div class="ms-auto widget-icon bg-success text-white">
+                    <i class="bi bi-currency-dollar"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+          </div>
+    </div>
+  </div>
+  
+  
+ <div class="card-body">
+  {% for pedido in pedidos_filtrados %}
+  <div class="d-flex align-items-center bg-light m-0 p-2" style="flex-wrap: nowrap; gap: 10px;">
+    <!-- Venta Nº -->
+    <div class="flex-fill text-center">
+      <p class="mb-0" style="font-size: calc(0.8rem + 0.3vw); white-space: nowrap;">Pedido Nº</p>
+      <h4 class="mb-0" style="font-size: calc(1rem + 0.5vw); white-space: nowrap;">{{ pedido.id }}</h4>
+    </div>
+    
+    <!-- Icono -->
+    <div class="flex-fill text-center">
+      <i class="lni lni-angle-double-down" style="font-size: calc(1rem + 0.3vw);"></i>
+    </div>
+  
+    <!-- Tipo de Pago -->
+    <div class="flex-fill text-center">
+      <p class="mb-0" style="font-size: calc(0.8rem + 0.3vw); white-space: nowrap;">Entregado</p>
+      
+      
+      
+      {% if pedido.entregado %}
+      <span class="badge rounded-pill bg-success">Con Exito</span>
+      {% else %}
+      <div class="spinner-grow text-warning" role="status"><span class="visually-hidden">Loading...</span>
+        
+      </div>
+      
+      {% endif %}
+        
+    </div>
+  
+    <!-- Total -->
+    <div class="flex-fill text-center bg-dark text-white p-2">
+      <p class="mb-0" style="font-size: calc(0.8rem + 0.3vw); white-space: nowrap;">TOTAL</p>
+      <h4 class="mb-0" style="font-size: calc(1rem + 0.5vw); white-space: nowrap;">Bs {{ pedido.amount }}</h4>
+    </div>
+  </div>
+  
+  <div class="accordion accordion-flush" id="accordionFlushExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="flush-headingOne">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne{{pedido.id}}" aria-expanded="false" aria-controls="flush-collapseOne{{pedido.id}}">
+            MAS DETALLES
+        </button>
+      </h2>
+      <div id="flush-collapseOne{{pedido.id}}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample" >
+        <div class="accordion-body">
+
+            <div class="d-flex align-items-center bg-light m-0 p-2" style="flex-wrap: nowrap; gap: 10px;">
+                <!-- Venta Nº -->
+                <div class="flex-fill ">
+                    <h4 class="mb-0" style="font-size: calc(0.5rem + 0.5vw); white-space: nowrap;">Cliente :{{ pedido.cliente_nombre }}</h4>
+                  <p class="mb-0" style="font-size: calc(0.4rem + 0.3vw); white-space: nowrap;">Fecha de Entrega: {{pedido.date_entrega}}</p>
+                 
+                </div>
+                <div class="flex-fill ">
+                    <h4 class="mb-0" style="font-size: calc(0.5rem + 0.5vw); white-space: nowrap;">Descuento :Bs. {{ pedido.descuento }}</h4>
+                  <p class="mb-0" style="font-size: calc(0.4rem + 0.3vw); white-space: nowrap;">Usuario :{{ pedido.user.username }}</p>
+                    
+                 
+                </div>
+            </div>
+            <div class="d-flex align-items-center bg-light m-0 p-2" style="flex-wrap: nowrap; gap: 10px;">
+                <!-- Venta Nº -->
+                <div class="flex-fill ">
+                    <h4 class="mb-0" style="font-size: calc(0.5rem + 0.5vw); white-space: nowrap;">Adelanto : Bs. {{ pedido.adelanto }} - {{pedido.get_type_payment_display}}</h4>
+                  <p class="mb-0" style="font-size: calc(0.4rem + 0.3vw); white-space: nowrap;">Fecha de inicio: {{pedido.date_sale}}</p>
+                 
+                </div>
+                <div class="flex-fill ">
+                    <h4 class="mb-0" style="font-size: calc(0.5rem + 0.5vw); white-space: nowrap;">Saldo : Bs. {{ pedido.saldo }} - 
+                        
+                        {% if pedido.get_type_payment_saldo_display%}
+                        {{pedido.get_type_payment_saldo_display}}
+                        {% else %}
+                        Aun no entregado
+                        {% endif %}
+                            
+                        </h4>
+                  <p class="mb-0" style="font-size: calc(0.4rem + 0.3vw); white-space: nowrap;">Tipo de Entrega: {{pedido.get_type_entrega_display}}</p>
+                 
+                </div>
+            </div>     
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  
+  
+  
+   <div class="table-responsive">
+    
+     <table class="table table-invoice">
+        <thead>
+          <tr>
+            <th class="text-left" width="10%">PRODUCTO</th>
+            <th class="text-center" width="10%">PRECIO VENTA</th>
+            <th class="text-center" width="10%">CANTIDAD</th>
+            <th class="text-center" width="20%">SUBTOTAL</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for detalle in pedido.detail_sale.all %}
+           <tr>
+              <td>
+                 <span class="text-inverse" >{{ detalle.product.name }}</span><br>
+                 <ul>
+                    {% for extra in detalle.extras.all %}
+                       <li>{{ extra.name }}</li> <!-- Muestra el nombre del extra -->
+                    {% endfor %}
+                 </ul>
+              </td>
+              <td class="text-center">Bs. {{ detalle.price_sale }}</td>
+              <td class="text-center">{{ detalle.count }}</td>
+              <td class="text-center">Bs. {{ detalle.subtotal }}</td>
+              
+           </tr>
+           {% endfor %}
+           
+           
+        </tbody>
+     </table>
+     
+     
+  </div>
+  
+  
+  {% endfor %}
+
+  <hr>
+<!-- begin invoice-note -->
+<div class="my-3">
+ * Cierra la caja para enviar tus ventas del dia de hoy<br>
+ 
+</div>
+<div class="col-12 d-flex justify-content-center mt-3">
+  
+    {% if is_paginated  %}
+    <nav aria-label="...">
+      <ul class="pagination">
+        
+        {% if page_obj.has_previous%}
+          <li class="page-item "><a class="page-link" href="?page={{page_obj.previous_page_number}}" tabindex="-1" aria-disabled="true">ANTERIOR</a>
+          </li>
+        {% endif %}
+          
+        
+        {% for pagina in paginator.page_range %}
+          {% if pagina == page_obj.number %}
+              
+              <li class="page-item active" aria-current="page"><a class="page-link" href="javascript:;">{{pagina}}<span class="visually-hidden">(current)</span></a>
+          {% else %}
+              
+              <li class="page-item"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a>
+
+          {% endif %}
+        {% endfor %}
+
+      {% if page_obj.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">SIGUIENTE</a></li>
+      {% endif %}
+                      
+        
+      </ul>
+    </nav>
+  {% endif %}
+    
+
+</div>
+<!-- end invoice-note -->
+ </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h3 class="modal-title " style="text-align: center;" id="exampleModalLabel">¿Seguro que desea cerrar caja?</h3>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            
+            <div class="col">
+              <div class="card radius-10 border-0 border-start border-pink border-3">
+                <div class="card-body">
+                  <div class="d-flex align-items-center">
+                    <div class="">
+                      <p class="mb-1">Total en TRANSFERENCIA</p>
+                      <h4 class="mb-0 text-tiffany">{{ total_transferencia }}</h4>
+                    </div>
+                    <div class="ms-auto widget-icon bg-pink text-white">
+                      <i class="lni lni-credit-cards"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+             </div>
+             
+              <div class="col">
+                <div class="card radius-10 border-0 border-start border-success border-3">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="">
+                        <p class="mb-1">Total en EFFECTIVO</p>
+                        <h4 class="mb-0 text-success">{{ total_efectivo }}</h4>
+                        
+                      </div>
+                      <div class="ms-auto widget-icon bg-success text-white">
+                        <i class="bi bi-currency-dollar fs-3"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               </div>
+              
+            
+          </div>
+          <div class="modal-footer">
+              <form action="{% url 'caja_app:caja-cerrar' %}" class="cell" method="post">
+              {% csrf_token %}
+              
+              <button type="submit" class="btn btn-success px-5 radius-30"> <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span class="visually-hidden"> </span> CONFIRMAR</button>
+              
+              </button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}
+
+
+
+
+{% block js %}
+
+<script src="{% static 'assets/plugins/easyPieChart/jquery.easypiechart.js' %} "></script>
+
+<script src="{% static 'assets/plugins/apexcharts-bundle/js/apexcharts.min.js' %} "></script>
+<script src="{% static 'assets/js/data-widgets.js' %} "></script>
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+
+{% endblock js %}
+    

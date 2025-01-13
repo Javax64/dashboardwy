@@ -1,0 +1,284 @@
+
+{% extends "base_usuario.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="{% static 'mis_css/ventas.css' %}" rel="stylesheet" />
+{% endblock css %}
+    
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-dismissible fade show 
+            {% if message.tags == 'success' %}alert-success{% endif %}
+            {% if message.tags == 'error' %}alert-danger{% endif %}
+            {% if message.tags == 'info' %}alert-info{% endif %}
+            {% if message.tags == 'warning' %}alert-warning{% endif %}
+        ">
+            <div class="
+                {% if message.tags == 'success' %}text-success{% endif %}
+                {% if message.tags == 'error' %}text-danger{% endif %}
+                {% if message.tags == 'info' %}text-info{% endif %}
+                {% if message.tags == 'warning' %}text-warning{% endif %}
+            ">
+                {{ message }}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+{% if form.errors %}
+<div class="alert border-0 border-warning border-start border-4 bg-light-warning alert-dismissible fade show">
+<div class="text-warning">
+  
+  <div class="alert alert-danger">
+      <ul>
+          {% for field in form %}
+              {% for error in field.errors %}
+                  <li> {{ error }}</li>
+              {% endfor %}
+          {% endfor %}
+      </ul>
+  </div>
+
+</div>
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+
+
+<div class="row">
+<div class="col-12 col-lg-12 d-flex">
+  <div class="card w-100">
+   <div class="card-header py-3">
+      <form method="POST" id="form_add_prod">{% csrf_token %}
+      <div class="row g-3">
+
+          <h2 class="font-weight-light text-center text-muted ">Entregar Pedido</h2>
+        
+        <div class="d-flex justify-content-center">
+          
+          <button type="button" class=" btn btn-primary mb-2 " data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><i class="fadeIn animated bx bx-barcode-reader"></i>  Escanear código QR</button>      
+        </div> 
+        
+          
+            
+        </div>
+        
+        {{ form.id_prod }}
+      </form>
+    </div>
+    
+ 
+
+
+      
+      
+      
+    </div>
+          
+    
+            
+         
+  </div>
+  
+</div>
+<div class="card-body">
+<div class="col-12 col-lg-12 d-flex">
+  <div class="card w-100">
+    <div class="card-header py-3">
+      <h5 class="mb-0">Detalles del Pedido  ID: {{pedido.id}} </h5>
+      
+    </div>
+    <div class="card-body">
+      <form class="row g-3">
+        
+        <div class="col-12">
+          <div class="col">
+            <div class="card radius-10 border-0 border-start border-tiffany border-3">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="">
+                    
+                    <h4 class="mb-0 text-tiffany"> {{pedido.cliente_nombre}} </h4>
+                  </div>
+                  <div class="ms-auto widget-icon bg-tiffany text-white">
+                    <i class="fadeIn animated bx bx-id-card"></i>
+                  </div>
+                </div>
+                <div row g-3>
+                  <div class="col-12">
+                    <p> CELULAR: {{pedido.cliente_celular}} 
+                      <a href="#" onclick="openWhatsApp('{{ pedido.cliente_celular }}')"><i class="lni lni-whatsapp"></i></a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card radius-10 border-0 border-start border-success border-3">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="">
+                    
+                    <h4 class="mb-0 text-success"> SALDO: {{pedido.saldo}} </h4>
+                  </div>
+                  <div class="ms-auto widget-icon bg-success text-white">
+                    <i class="bi bi-currency-dollar fs-3"></i>
+                  </div>
+                </div>
+                <div row g-3>
+                  <div class="col-12">
+                    <p> ADELANTO:  {{pedido.adelanto}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+        </div>
+        
+       
+       <div class="col-12">
+         <div class="d-grid">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+            class="feather feather-shopping-cart"><circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg> Entregar Pedido
+        </button>
+         </div>
+       </div>
+       
+       
+      </form>
+    </div>
+  </div>
+</div>
+</div><!--end row-->
+
+</div>
+
+
+
+
+   
+   
+
+
+          
+          
+    
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content2">
+        <div class="modal-header ">
+            
+            <h5 class="modal-title ">Escanear código QR</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body2">
+            <video id="video" class="scanner-video"></video>
+            <div id="scannerFrame">
+              <div class="corner top-left"></div>
+              <div class="corner top-right"></div>
+              <div class="corner bottom-left"></div>
+              <div class="corner bottom-right"></div>
+              <div id="scanline"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+  
+
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Terminar venta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action=" {% if pedido.id %} {% url 'pedidos_app:pedido-entregar-terminar'%} {% endif %}" class="grid-x grid-margin-x" method="POST">{% csrf_token %}
+          <div class="modal-body">
+            <div class="cell medium-6">
+              <div class="card-body">
+                <div class="input-group mb-3">
+                  <label class="input-group-text" for="inputGroupSelect01">Tipo de Pago</label>
+                  {{ form_voucher.type_payment }}
+                </div>
+              </div>
+              
+              
+              <label></label>
+
+              
+             
+            
+            
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="col-12">
+              <div class="d-grid">
+               <button type="submit" class="btn btn-lg btn-success px-5"><i class="fadeIn animated bx bx-package"></i> Entregar</button>
+              </div>
+            </div>
+          </div>
+          
+        </form>
+    </div>
+</div>
+</div>
+
+
+<script>
+  function openWhatsApp(phoneNumber) {
+        const url = `https://wa.me/591${phoneNumber}`;
+        window.open(url, '_blank');
+    }
+</script>
+
+
+{% endblock content %}
+
+
+
+
+{% block js %}
+<script src="https://unpkg.com/@zxing/library@0.18.6/umd/index.js"></script>
+<script src="{% static 'mis_js/scannerPedido.js' %}" ></script>
+
+
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+{% endblock js %}
+    

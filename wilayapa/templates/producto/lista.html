@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{% endblock css %}
+    
+
+{% block content %}
+
+
+
+
+
+
+
+
+<div class="card">
+    <div class="card-body">
+      <div class="d-flex align-items-center">
+         <h5 class="mb-0">Productos Registrados</h5>
+          <form class="ms-auto position-relative" method="GET">
+
+
+            <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bi bi-search"></i></div>
+            <input class="form-control ps-5" type="text" placeholder="search" id="kword" name="kword">
+
+
+          </form>
+      </div>
+      <div class="table-responsive mt-3">
+        <table class="table align-middle">
+          <thead class="table-secondary">
+            <tr>
+             <th>#</th>
+             <th>Codigo</th>
+             <th>Nombre</th>
+             <th>Activo</th>
+             <th>Marca</th>
+             <th>Cantidad en stock</th>
+             
+             <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in producto  %}
+            <tr>
+            
+            
+                
+            
+                
+             <td>{{ u.id}}</td>
+              <td>
+                <div class="d-flex align-items-center gap-3 cursor-pointer">
+                    {% if u.image %}
+                        <img src="{{ u.image.url }}" class="rounded-circle" width="44" height="44" alt="Producto">
+                    {% else %}
+                        <img src="/static/assets/images/favicon-32x32.png" class="rounded-circle" width="44" height="44" alt="Producto por defecto">
+                    {% endif %}
+                    <div class="">
+                        <p class="mb-0">{{u.codigo}}</p>
+                   </div>
+                </div>
+              </td>
+              <td>{{u.name}}</td>
+              <td>
+                {% if u.anulate %}
+                <span class="badge bg-light-danger text-danger w-100">Inactivo</span>
+                  
+                {% else %}
+                <span class="badge bg-light-success text-success w-100">Activo</span>
+                
+                {% endif %}
+              </td>
+              <td>{{u.marca}}</td>
+              <td>{{u.count}}</td>
+              
+              <td>
+                <div class="table-actions d-flex align-items-center gap-3 fs-6">
+                
+                  <form method="POST" action ="{% url 'producto_app:producto-update' u.id%}" > {% csrf_token %}
+                    <button style="all: unset; cursor: pointer;"><a href="javascript:;" class="text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit"><i class="bi bi-pencil-fill"></i></a></button>
+                  </form>
+                  
+                  <form method="POST" action ="{% url 'producto_app:producto-delete' u.id%}" > {% csrf_token %}
+                    <button type="button" style="all: unset; cursor: pointer;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{u.id}}"><a class="text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete"><i class="bi bi-trash-fill"></i></a></button>
+                    <div class="modal fade" id="exampleModal{{u.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Esta Seguro?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">Desea elliminar a {{u.name}}</div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-primary">Si</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </form>
+                  
+                </div>
+              </td>
+             
+            </tr>
+            
+            {% endfor %}
+          </tbody>
+        </table>
+        <!-- Modal -->
+        
+        <!-- Modal -->
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+
+{% block js %}
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+{% endblock js %}
+    

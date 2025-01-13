@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/input-tags/css/tagsinput.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{% endblock css %}
+    
+
+
+{% block content %}
+<div class="card-body p-4 p-sm-5">
+    <h5 class="card-title">Cambiar contraseña de {{user.username}}</h5>
+    <p class="card-text mb-5">Ingresa una nueva contraseña para  {{ user.full_name}}!</p>
+    <form class="form-body" method="POST">{% csrf_token %}
+        <div class="row g-3">
+          <div class="col-12">
+            <label for="inputNewPassword" class="form-label">Nueva Contraseña</label>
+            <div class="ms-auto position-relative">
+              <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bi bi-lock-fill"></i></div>
+              {{form.password1}}
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="inputConfirmPassword" class="form-label">Confirma la contraseña</label>
+            <div class="ms-auto position-relative">
+              <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bi bi-lock-fill"></i></div>
+              {{form.password2}}
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="d-grid gap-3">
+              <button type="submit" class="btn btn-primary radius-30">Cambiar la contraseña</button>
+              
+            </div>
+          </div>
+        </div>
+    </form>
+ </div>
+</div>
+    
+   <!--end page main-->
+{% endblock content %}
+
+
+{% block js %}
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+
+<script src="{% static 'assets/plugins/input-tags/js/tagsinput.js' %} "></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+{% endblock js %}
+    

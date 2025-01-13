@@ -1,0 +1,106 @@
+/* Contenedor modal */
+.modal-content2 {
+    background-color: #ffffffc5;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 320px;  /* Tamaño máximo del modal */
+    height: 320px;  /* Tamaño fijo del modal */
+    overflow: hidden; /* Asegura que el contenido no se salga del contenedor */
+    position: relative;
+    color: #000000;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Contenedor del video para centrarlo */
+.modal-body2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 88%;
+    overflow: hidden;
+}
+
+/* Estilo para el video */
+#video {
+    width: 100%;   /* El video ocupa todo el ancho disponible */
+    height: 100%;  /* El video ocupa toda la altura disponible */
+    object-fit: cover;  /* Ajusta el video para cubrir el contenedor, puede recortar si es necesario */
+    border-radius: 10px; /* Bordes redondeados */
+    aspect-ratio: 1 / 1;  /* Mantiene el video con proporción cuadrada */
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Cuadro delimitador en el escáner */
+#scannerFrame {
+    position: absolute;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Esquinas del marco de escaneo */
+.corner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(192, 192, 192, 0.8);
+}
+
+.top-left {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+.top-right {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+}
+
+.bottom-left {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+}
+
+.bottom-right {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
+
+/* Línea de escaneo */
+#scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.5);
+    animation: scan 2s linear infinite;
+    display: block;
+}
+
+/* Animación de la línea de escaneo */
+@keyframes scan {
+    0% { top: 0%; }
+    50% { top: 98%; }
+    100% { top: 0%; }
+}

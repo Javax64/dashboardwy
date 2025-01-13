@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{% endblock css %}
+    
+
+
+{% block content %}
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h6 class="mb-0 text-uppercase">Registrar Usuario</h6>
+        <hr/>
+        <div class="card">
+            <div class="card-body">
+                <div class="p-4 border rounded">
+                    <form class="row g-3 needs-validation" method="POST"> {% csrf_token %}
+                        <div class="col-md-4">
+                            <label for="validationCustomUsername" class="form-label">Usuario</label>
+                            <div class="input-group has-validation"> <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                {{form.username}}
+                                <div class="invalid-feedback">Please choose a username.</div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-4">
+                            <label for="validationCustom02" class="form-label">Nombre Completo</label>
+                            {{ form.full_name}}
+                            
+                        </div>
+                        <div class="col-md-4">
+                            <label for="validationCustom03" class="form-label">Genero</label>
+                            {{form.genero}}
+                           
+                        </div>
+                        <div class="col-md-6">
+                            <label for="validationCustom03" class="form-label">Genero</label>
+                            {{form.ocupation}}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label">Contraseña</label>
+                            {{form.password1}}
+                        </div>
+                        {% for error in form.password1.errors %}
+                            <p class="cell" style="color: red;">
+                            {{ error|escape }}
+                            </p>
+                        {% endfor %}
+                        <div class="col-md-3">
+                            <label for="validationCustom05" class="form-label">Repetir Contraseña</label>
+                            {{form.password2}}
+                        </div>
+                        {% for error in form.password2.errors %}
+                            <p class="cell" style="color: red;">
+                            {{ error|escape }}
+                            </p>
+                        {% endfor %}
+                        <div class="col-12">
+                            {{form.date_birth}}
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit" ><i class="bx bx-check-circle mr-1"></i>Registrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock content %}
+
+
+{% block js %}
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+{% endblock js %}
+    

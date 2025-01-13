@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="{% static 'assets/plugins/select2/css/select2.min.css' %} " rel="stylesheet" />
+	<link href="{% static 'assets/plugins/select2/css/select2-bootstrap4.css' %} " rel="stylesheet" />
+{% endblock css %}
+    
+
+{% block content %}
+
+<div class="row">
+    <div class="col-xl-9 mx-auto">
+        <h6 class="mb-0 text-uppercase">Registrar Producto</h6>
+        <hr/>
+        <div class="card">
+            <div class="card-body">
+                <div class="p-4 border rounded">
+                    <form class="row g-3 needs-validation" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                        <div class="col-md-12">
+                            {% for error in form.codigo.errors %}
+                            <div class="alert border-0 bg-light-danger alert-dismissible fade show py-2">
+                                <div class="d-flex align-items-center">
+                                  <div class="fs-3 text-danger"><i class="bi bi-x-circle-fill"></i>
+                                  </div>
+                                  <div class="ms-3">
+                                    <div class="text-danger">{{ error|escape }}</div>
+                                  </div>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              </div>
+                            {% endfor %}
+                            {% for error in form_extras.nuevo_extra_price.errors %}
+                            <div class="alert border-0 bg-light-danger alert-dismissible fade show py-2">
+                                <div class="d-flex align-items-center">
+                                  <div class="fs-3 text-danger"><i class="bi bi-x-circle-fill"></i>
+                                  </div>
+                                  <div class="ms-3">
+                                    <div class="text-danger">{{ error|escape }}</div>
+                                  </div>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              </div>
+                            {% endfor %}
+
+                            
+                            {% for error in form.marca.errors %}
+                            <div class="alert border-0 bg-light-danger alert-dismissible fade show py-2">
+                                <div class="d-flex align-items-center">
+                                  <div class="fs-3 text-danger"><i class="bi bi-x-circle-fill"></i>
+                                  </div>
+                                  <div class="ms-3">
+                                    <div class="text-danger">{{ error|escape }}</div>
+                                  </div>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              </div>
+                            {% endfor %}
+                            
+                            
+                        </div>
+                        <div class="col-md-4">
+                            
+                            <label for="validationCustomUsername" class="form-label">Codigo</label>
+                            <div class="input-group has-validation"> <span class="input-group-text" id="inputGroupPrepend"><i class="lni lni-key"></i></span>
+                                {{form.codigo}}
+                                <div class="invalid-feedback">Please choose a username.</div>
+                            </div>
+                            
+                        </div>
+                        <div   class="col-md-4">
+                            <label for="validationCustom02" class="form-label">Nombre Completo</label>
+                            {{ form.name}}
+                            
+                        </div>
+                        <!-- Div para la selección de marca -->
+                        <div id="marca-selection" class="col-md-4">
+                            <label for="validationCustom03" class="form-label">Marca</label>
+                            {{form.marca}}
+                        </div>
+                        <!-- Div para agregar nueva marca, oculto al inicio -->
+                        <div id="new-marca" class="col-md-4" style="display:none;">
+                            <label for="validationCustom03" class="form-label">Marca Nueva</label>
+                            {{form.new_marc}}
+                        </div>
+                        <!-- Botón para alternar entre selección de marca y nueva marca -->
+                        <div class="col-md-12">
+                            <button class="btn btn-outline-info px-5 radius-30 float-end" type="button" id="toggle-button" onclick="toggleMarca()">Agregar Nueva Marca</button>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="validationCustom05" class="form-label">Descripcion</label>
+                            {{form.description}}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label">Cantidad</label>
+                            {{form.count}}
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="validationCustom04" class="form-label">Precio Venta</label>
+                            <div class="input-group mb-3"> <span class="input-group-text">$</span>
+                                
+                                {{form.sale_price}}
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="col-12" >
+                            <label for="{{ form.image.id_for_label }}" class="form-label">Imagen del Producto</label>
+                            {{form.image}}
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="{{ form.extra.id_for_label }}" class="form-label">Extras</label>
+                            <select name="{{ form.extra.name }}" id="{{ form.extra.id_for_label }}" class="multiple-select" data-placeholder="Selecciona extras" multiple="multiple">
+                                {% for option in form.extra.field.queryset %}
+                                    <option value="{{ option.id }}" {% if option in form.extra.value %}selected{% endif %}>{{option.price}} Bs - {{ option.name }}</option>
+                                    
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Botón para alternar entre selección de marca y nueva marca -->
+                        <div class="col-md-12">
+                            <button class="btn btn-outline-info px-5 radius-30 float-end" type="button" id="toggle-button" onclick="addInput2()">Agregar Extra</button>
+                        </div>
+                        <div id="formExtraContent">
+                            {{ form_extras.management_form }}
+                            {% for form_extra in form_extras %}
+                            <!-- Fila para los campos de nombre y precio del extra -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="basic-addon3">Nuevo nombre del extra</span>
+                                        {{ form_extra.nuevo_extra_name }}
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        
+                                        {{ form_extra.nuevo_extra_price }}
+                                        <span class="input-group-text" id="basic-addon3">$ Nuevo Precio del Extra</span>
+                                    </div>
+                                    
+                                </div>
+                                <hr/>
+                                
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        
+                        <div class="col-12 d-flex justify-content-center">
+                            <button class="btn btn-primary " type="submit" ><i class="bx bx-check-circle mr-2"></i>Registrar</button>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+{% endblock content %}
+
+
+{% block js %}
+<script src="{% static 'mis_js/add_marca_extras.js' %} "></script>
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+<script src="{% static 'assets/plugins/select2/js/select2.min.js' %} "></script>
+  <script src="{% static 'assets/js/form-select2.js' %}"></script>
+
+{% endblock js %}
+    

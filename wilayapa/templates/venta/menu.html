@@ -1,0 +1,212 @@
+
+{% extends "base_usuario.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{% endblock css %}
+    
+{% block content %}
+<style>
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+    height: 100%; /* Ocupa toda la pantalla */
+    padding: 20px; /* Espaciado alrededor */
+    background-color: #ffffff;
+    position: relative; /* Necesario para posicionar la imagen abajo */
+}
+
+/* Título y descripción */
+.menu-description {
+    text-align: center;
+    margin-top: 20px; /* Espacio arriba */
+}
+
+.menu-description h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.menu-description p {
+    font-size: 18px;
+    color: #555;
+    margin-top: 10px;
+}
+
+/* Estilo general de los botones */
+.menu-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    padding: 20px;
+    font-size: 20px; /* Fuente más grande */
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón de Ventas */
+.ventas-btn {
+    background-color: #28a745;
+}
+
+/* Botón de Entregar Pedidos */
+.pedidos-btn {
+    background-color: #ffc107;
+}
+
+/* Efecto Hover para ambos botones */
+.menu-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Hover específico para cada botón */
+.ventas-btn:hover {
+    background-color: #218838;
+}
+
+.pedidos-btn:hover {
+    background-color: #e0a800;
+}
+
+/* Iconos más grandes */
+.menu-button i {
+    margin-right: 10px;
+    font-size: 30px; /* Iconos grandes */
+}
+
+/* Indicaciones visuales para ayudar a los usuarios */
+.menu-indications {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.indicator-text {
+    font-size: 18px;
+    color: #555;
+}
+
+/* Estilo de la flecha de indicación */
+.arrow {
+    width: 30px;
+    height: 30px;
+    border: solid 5px #333;
+    border-width: 5px 5px 0 0;
+    transform: rotate(45deg);
+    margin-top: 10px;
+}
+
+/* Media Queries para pantallas pequeñas (móviles) */
+@media (max-width: 600px) {
+    .menu-button {
+        font-size: 18px; /* Reducir tamaño de texto */
+        padding: 15px;
+    }
+
+    .menu-description h2 {
+        font-size: 22px; /* Reducir tamaño del título */
+    }
+
+    .menu-description p {
+        font-size: 16px; /* Reducir tamaño de la descripción */
+    }
+
+    .indicator-text {
+        font-size: 16px; /* Reducir tamaño del texto de la indicación */
+    }
+}
+
+/* Estilo de la imagen decorativa */
+.menu-container::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 500px; /* Ajusta la altura según el tamaño de tu imagen */
+    background-image: url('{% static "assets/images/fondo1.webp" %}');
+    background-size: cover;
+    background-position: center;
+    margin-top: -15px; /* Espacio entre los botones y la imagen */
+}
+</style>
+<div class="card">
+    <div class="menu-container">
+        <!-- Título descriptivo -->
+        <div class="menu-description">
+            <h2>Seleccione una acción</h2>
+            <p>Haga clic en el botón correspondiente para continuar.</p>
+        </div>
+  
+        <!-- Botón de Ventas -->
+        <a class="menu-button ventas-btn" href="{% url 'venta_app:venta-index' %}">
+            <i class="bi bi-cart-check"></i> <!-- Icono de ventas -->
+            <span>Ventas</span>
+        </a>
+  
+        <!-- Botón de Pedidos -->
+         
+        <a class="menu-button pedidos-btn" href="{% url 'pedidos_app:pedido-entregar' %}">
+            
+            <i class="bi bi-box-check"></i> <!-- Icono de entregar pedidos -->
+            <span>Entregar Pedidos</span>
+        </a>
+    </div>
+  </div>
+   
+
+
+
+
+
+{% endblock content %}
+
+
+
+
+{% block js %}
+<script src="https://unpkg.com/@zxing/library@0.18.6/umd/index.js"></script>
+<script src="{% static 'mis_js/scannerVenta.js' %}" ></script>
+
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+{% endblock js %}
+    

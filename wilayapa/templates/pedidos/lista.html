@@ -1,0 +1,382 @@
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<meta name="csrf-token" content="{{ csrf_token }}">
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{% endblock css %}
+    
+
+{% block content %}
+
+
+
+
+  
+
+
+
+
+<div class="card">
+  <form method="GET">
+  <div class="card-header py-3"> 
+    <h4>Lista de Pedidos</h4>
+    <div class="row g-3 align-items-center">
+      
+      <div class="col-lg-2 col-md-6 me-auto">
+        <label class="form-label">Nombre o Celular</label>
+        <div class="ms-auto position-relative">
+          
+          <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bi bi-search"></i></div>
+          <input class="form-control ps-5" type="text" placeholder="Buscar Cliente" name="kword" id="kword">
+        </div>
+      </div>
+      <div class="col-lg-2 col-6 col-md-3">
+        
+          <label class="form-label">Fecha Inicio</label>
+          <input type="date" class="form-control" name="fecha1" id="fecha1">
+        
+      </div>
+      <div class="col-lg-2 col-6 col-md-3">
+        
+        <label class="form-label">Fecha Fin</label>
+        <input type="date" class="form-control" name="fecha2" id="fecha2">
+      
+    </div>
+      <div class="col-lg-2 col-6 col-md-3">
+        <label class="form-label">Tipo</label>
+        <select class="form-select" name="estado" id="estado">
+          <option>Seleccion</option>
+        <option value="Entregado">Entregado</option>
+        <option value="Pendiente">Pendiente</option>
+          
+        </select>
+      </div>
+      <div class="col-lg-2 col-6 col-md-3">
+        <label class="form-label">Entrega</label>
+        <select class="form-select" name="entrega" id="entrega">
+          <option>Seleccion</option>
+          <option value="Tienda">Tienda</option>
+        <option value="Envio">Envio</option>
+        <option value="Delivery">Delivery</option>
+          
+        </select>
+      </div>
+      <div class="col-lg-2 col-6 col-md-3">
+        <button class="btn btn-info px-5 radius-30" type="submit">Filtrar</button>
+        
+      </div>
+      
+    </div>
+   </div>
+   
+  </form>
+  
+    <div class="card-body">
+      
+          
+      
+      <div class="table-responsive mt-3">
+        <table class="table align-middle">
+          <thead class="table-secondary">
+            <tr>
+             <th>#</th>
+             <th>CLIENTE</th>
+             <th>CELULAR</th>
+             
+             <th>SALDO</th>
+             <th>TIPO DE ENTREGA</th>
+             <th>FECHA ENTREGA</th>
+             <th>ESTADO</th>
+             <th>ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in pedidos  %}
+            <tr class="{% cycle 'table-light' 'table-green' %}">
+            
+            
+                
+            
+                
+             <td>{{ u.id}}</td>
+              <td>
+                <div class="d-flex align-items-center gap-3 cursor-pointer">
+                    
+                    <div class="">
+                        <p class="mb-0">{{u.cliente_nombre}}</p>
+                   </div>
+                </div>
+              </td>
+              <td>
+                {{ u.cliente_celular }}
+                <a href="#" onclick="openWhatsApp('{{ u.cliente_celular }}')"><i class="lni lni-whatsapp"></i></a>
+            </td>
+            
+              
+              
+              
+              <td>{{u.saldo}}</td>
+              <td>
+                {% if u.type_entrega == '1' %}
+                    <span class="badge bg-light-info text-info w-100">Envío {{u.cliente_departamento}}</span>
+                {% elif u.type_entrega == '2' %}
+                    <span class="badge bg-light-primary text-primary w-100">Delivery</span>
+                {% elif u.type_entrega == '0' %}
+                    <span class="badge bg-light-success text-success w-100">Entrega en Tienda</span>
+                {% else %}
+                    <span class="badge bg-light-secondary text-secondary w-100">Método no especificado</span>
+                {% endif %}
+            </td>
+              <td>{{u.date_entrega|date:"l d F Y"}}</td>
+              <td>
+                {% if u.entregado %}
+                
+                <span class="badge rounded-pill bg-success"><i class="lni lni-checkmark"></i> Entregado con Exito</span>
+                  
+                {% else %}
+                
+                
+                  <span class="badge rounded-pill bg-warning text-dark"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Pendiente</span>
+                
+                
+                
+                
+                {% endif %}
+              </td>
+              <td>
+                <div class="table-actions d-flex align-items-center gap-3 fs-6">
+                  <form method="GET" action="{% url 'pedidos_app:pedido-detalle' u.id %}">
+                    {% csrf_token %}
+                    <button style="all: unset; cursor: pointer;">
+                        <a class="text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ver">
+                            <i class="fadeIn animated bx bx-clipboard"></i>
+                        </a>
+                    </button>
+                </form>
+                  <form method="POST" action ="{% url 'pedidos_app:pedido-editar' u.id%}" > {% csrf_token %}
+                    <button style="all: unset; cursor: pointer;"><a href="javascript:;" class="text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit"><i class="bi bi-pencil-fill"></i></a></button>
+                  </form>
+                  
+                  <form method="POST" action ="{% url 'pedidos_app:pedido-anulate' u.id%}" > {% csrf_token %}
+                    <button type="button" style="all: unset; cursor: pointer;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{u.id}}"><a class="text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete"><i class="bi bi-trash-fill"></i></a></button>
+                    <div class="modal fade" id="exampleModal{{u.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">¿Está Seguro de eliminar el pedido?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card cell">
+                                        <div class="card-divider">
+                                            <h3>Pedido de: {{ u.cliente_nombre }}</h3>
+                                        </div>
+                                        <div class="card-section">
+                                            <h4>Monto: {{ u.amount }}</h4>
+                                            <p>FECHA: {{ u.date_sale }}</p>
+                                            <p>CANTIDAD PRODUCTOS: {{ u.count }}</p>
+                                            <p>TIPO DE PAGO: {{ u.get_type_payment_display }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-primary">Sí</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </form>
+                  
+                </div>
+              </td>
+             
+            </tr>
+            
+            {% endfor %}
+          </tbody>
+        </table>
+        
+        {% if is_paginated  %}
+          <nav aria-label="...">
+            <ul class="pagination">
+              
+              {% if page_obj.has_previous%}
+                <li class="page-item "><a class="page-link" href="?page={{page_obj.previous_page_number}}" tabindex="-1" aria-disabled="true">ANTERIOR</a>
+                </li>
+              {% endif %}
+                
+              
+              {% for pagina in paginator.page_range %}
+                {% if pagina == page_obj.number %}
+                    
+                    <li class="page-item active" aria-current="page"><a class="page-link" href="javascript:;">{{pagina}}<span class="visually-hidden">(current)</span></a>
+                {% else %}
+                    
+                    <li class="page-item"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a>
+
+                {% endif %}
+              {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">SIGUIENTE</a></li>
+            {% endif %}
+                            
+              
+            </ul>
+          </nav>
+        {% endif %}
+          
+        
+        <!-- Modal -->
+        
+        <!-- Modal -->
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Verificar la existencia de las imágenes al cargar la página
+    fetch('/verificar_imagen_ticket/')  // URL para verificar los archivos específicos
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const images = data.images;
+                if (images) {
+                    let printQueue = [];  // Para almacenar las imágenes a imprimir
+
+                    // Si la imagen de ticket_temp existe
+                    if (images.ticket_temp) {
+                        printQueue.push(images.ticket_temp);
+                    }
+
+                    // Si la imagen de combined_ticket existe
+                    if (images.combined_ticket) {
+                        printQueue.push(images.combined_ticket);
+                    }
+
+                    // Si hay imágenes para imprimir, procesarlas una por una
+                    if (printQueue.length > 0) {
+                        // Función para imprimir y eliminar la imagen
+                        const printAndDelete = (imageUrl) => {
+                            // Abrir la ventana de impresión
+                            const printWindow = window.open('', '_blank');
+                            printWindow.document.write(`
+                                <html>
+                                <head>
+                                    <title>Impresión de Ticket</title>
+                                    <style>
+                                        @page { size: 7cm auto; margin: 0; }
+                                        body { margin: 0; display: flex; justify-content: center; align-items: flex-start; height: 100vh; padding-top: 0; }
+                                        img { width: 7cm; height: auto; display: block; image-rendering: crisp-edges; image-rendering: pixelated; }
+                                    </style>
+                                </head>
+                                <body>
+                                    <img src="${imageUrl}" onload="window.print(); window.close();" />
+                                </body>
+                                </html>
+                            `);
+                            printWindow.document.close();
+
+                            // Verificar si la ventana de impresión se cerró o si se canceló
+                            printWindow.onafterprint = function() {
+                                // Eliminar la imagen después de la impresión
+                                eliminarImagen(imageUrl);
+                            };
+
+                            printWindow.onbeforeunload = function() {
+                                // Si la ventana se cierra sin imprimir, también eliminamos la imagen
+                                eliminarImagen(imageUrl);
+                            };
+                        };
+
+                        // Función para eliminar la imagen
+                        const eliminarImagen = (imageUrl) => {
+                            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                            fetch('/eliminar_imagenes_ticket/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken
+                                },
+                                body: JSON.stringify({ image: imageUrl }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    console.log('Imagen eliminada: ' + imageUrl);
+                                } else {
+                                    console.error('Error al eliminar la imagen: ' + imageUrl);
+                                }
+                            })
+                            .catch(error => console.error('Error al eliminar la imagen:', error));
+                        };
+
+                        // Imprimir las imágenes en secuencia
+                        const processQueue = () => {
+                            if (printQueue.length > 0) {
+                                const currentImage = printQueue.shift();  // Obtener la siguiente imagen de la cola
+                                printAndDelete(currentImage);  // Imprimir y luego eliminar la imagen
+
+                                // Después de eliminar, procesar la siguiente imagen en la cola
+                                setTimeout(processQueue, 2000);  // Retraso de 2 segundos entre impresiones
+                            }
+                        };
+
+                        // Iniciar el proceso de impresión
+                        processQueue();
+                    } else {
+                        console.error('No hay imágenes disponibles para imprimir.');
+                    }
+                } else {
+                    console.error('No se encontraron imágenes en el servidor.');
+                }
+            } else {
+                console.error('Error al verificar las imágenes:', data.message);
+            }
+        })
+        .catch(error => console.error('Error al verificar las imágenes:', error));
+});
+
+function openWhatsApp(phoneNumber) {
+        const url = `https://wa.me/591${phoneNumber}`;
+        window.open(url, '_blank');
+    }
+</script>
+{% endblock content %}
+
+
+{% block js %}
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+{% endblock js %}
+    

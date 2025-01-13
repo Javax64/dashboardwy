@@ -1,0 +1,191 @@
+
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
+
+{% endblock css %}
+    
+{% block content %}
+<div class="card border shadow-none">
+    <div class="card-header py-2">
+      <div class="row g-2">
+        <!-- Agrupación de los dos primeros elementos -->
+        <div class="col-12 col-lg-8 d-flex flex-wrap gap-2">
+          <!-- Columna 1 -->
+          <div class="card flex-grow-1 radius-10 bg-primary">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div>
+                  <p class="mb-1 text-white text-truncate small">Total Ventas Hoy</p>
+                  <h4 class="mb-0 text-white">Bs. {{ total_ventas }}</h4>
+                </div>
+                <div class="ms-auto widget-icon bg-white-1 text-white">
+                  <i class="bi bi-bag-check-fill fs-3"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Columna 2 -->
+          <div class="card flex-grow-1 radius-10 bg-danger">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div>
+                  <p class="mb-1 text-white text-truncate small">Total Anulaciones</p>
+                  <h4 class="mb-0 text-white">Bs. {{ total_anulaciones }}</h4>
+                </div>
+                <div class="ms-auto text-white">
+                  <i class="bi bi-cup fs-3"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Columna 3 -->
+        <div class="col-12 col-lg-4">
+          <div class="card radius-10 bg-success">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div>
+                  <p class="mb-1 text-white text-truncate small">Productos en 0</p>
+                  <h4 class="mb-0 text-white">{{ stok_cero }}</h4>
+                </div>
+                <div class="ms-auto widget-icon bg-white-1 text-white">
+                  <i class="bi bi-currency-dollar fs-3"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card-body">
+        <div class="table-responsive">
+            <!-- Tabla de resumen total de ventas por fecha -->
+            <table class="table table-invoice">
+                <thead>
+                    <tr>
+                        <th class="text-left" width="10%">FECHA</th>
+                        <th class="text-center" width="10%">NUMERO DE VENTAS</th>
+                        <th class="text-center" width="10%">TOTAL GANANCIAS</th>
+                        <th class="text-center" width="10%">VENTAS EFECTIVO</th>
+                        <th class="text-center" width="10%">VENTAS TRANSFERENCIA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venta in resumen_semana %}
+                    <tr>
+                        <td>
+                            <span class="text-inverse">{{ venta.sale__date_sale__date }}</span><br>
+                        </td>
+                        <td class="text-center">{{ venta.num_ventas }}</td>
+                        <td class="text-center">BS. {{ venta.total_ganancias }}</td>
+                        <td class="text-center">BS. {{ venta.total_efectivo }}</td>
+                        <td class="text-center">BS. {{ venta.total_transferencia }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Tabla de desglose de ventas por usuario -->
+        <div class="table-responsive">
+            <table class="table table-invoice">
+                <thead>
+                    <tr>
+                        <th class="text-left" width="20%">FECHA</th>
+                        <th class="text-left" width="20%">USUARIO</th>
+                        <th class="text-center" width="10%">NUMERO DE VENTAS</th>
+                        <th class="text-center" width="10%">TOTAL GANANCIAS</th>
+                        <th class="text-center" width="10%">VENTAS EFECTIVO</th>
+                        <th class="text-center" width="10%">VENTAS TRANSFERENCIA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fecha, ventas in resumen_por_usuario.items %}
+                        <tr class="bg-light">
+                            <td colspan="6">
+                                <strong>{{ fecha }}</strong> <!-- Aquí mostramos la fecha -->
+                            </td>
+                        </tr>
+                        
+                        <!-- Aquí iteramos sobre los usuarios para esa fecha -->
+                        {% for usuario_venta in ventas %}
+                            <tr>
+                                <td class="text-left pl-4">{{ fecha }}</td>
+                                <td class="text-left">{{ usuario_venta.sale__user__username }}</td> <!-- Username -->
+                                <td class="text-left">{{ usuario_venta.sale__user__full_name }}</td> <!-- Full Name -->
+                                <td class="text-center">{{ usuario_venta.num_ventas }}</td>
+                                <td class="text-center">BS. {{ usuario_venta.total_ganancias }}</td>
+                                <td class="text-center">BS. {{ usuario_venta.total_efectivo }}</td>
+                                <td class="text-center">BS. {{ usuario_venta.total_transferencia }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        
+        
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+
+
+
+
+{% block js %}
+
+<script src="{% static 'assets/plugins/easyPieChart/jquery.easypiechart.js' %} "></script>
+
+<script src="{% static 'assets/plugins/apexcharts-bundle/js/apexcharts.min.js' %} "></script>
+<script src="{% static 'assets/js/data-widgets.js' %} "></script>
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+
+{% endblock js %}
+    
+

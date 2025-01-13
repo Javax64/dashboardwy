@@ -1,0 +1,267 @@
+
+ 
+      <form method="POST" id="form_add_prod">{% csrf_token %}
+        <div class="row g-3 align-items-center">
+          <div class="col-12 col-lg-4 col-md-6 me-auto">
+            <h5 class="mb-1">Nueva Venta</h5>
+            
+          </div>
+          <div class="d-flex justify-content-center">
+                  
+            <button type="button" class=" btn btn-primary mb-6 " data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg">Escanear código QR</button>      
+        </div>
+        <hr/>
+          <div class="row">
+            
+            <div class="col-md-4">
+              <label for="validationCustomUsername" class="form-label">Productos</label>
+              <div class="input-group has-validation"> <span class="input-group-text" id="inputGroupPrepend">Producto</span>
+                {{ form.productId }}
+                
+              </div>
+            </div>
+            <div class="col-md-2">
+              <label for="validationCustomUsername" class="form-label">Cantidad</label>
+              <div class="input-group has-validation"> <span class="input-group-text" id="inputGroupPrepend"><i class="lni lni-calculator"></i></span>
+                {{ form.count }}
+                
+              </div>
+            </div>
+            <div class="col-md-1 ">
+              <label for="validationCustomUsername" class="form-label">.</label>
+              <div class="has-validation">
+               
+                <button type="submit" class="btn btn-primary">Agregar</button>
+                
+              </div>
+              
+            </div>
+            
+        </div>
+          
+          
+
+        </div>
+      </form>
+      </div>
+      
+     
+
+        <div class="row">
+            <div class="col-12 col-lg-8">
+              <div class="card border shadow-none radius-10">
+                <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table align-middle mb-0">
+                        <thead class="table-light">
+                          <tr>
+                              <th >COD</th>
+                              <th >Cantidad</th>
+                              <th >Nombres</th>
+                              
+                              <th >Precio (S/)</th>
+                              
+                              <th>Acciones</th>
+                              <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for producto in productos %}
+                          
+                          <tr>
+                              <td>
+                                  <div class="orderlist">
+                                  <a class="d-flex align-items-center gap-2" href="javascript:;">
+                                    <div class="product-box">
+                                      {% if producto.product.image %}
+                                      <img src="{{ producto.product.image.url }}" class="rounded-circle" width="44" height="44" alt="Producto">
+                                      {% else %}
+                                          <img src="/static/assets/images/favicon-32x32.png" class="rounded-circle" width="44" height="44" alt="Producto por defecto">
+                                      {% endif %}
+                                      
+                                    </div>
+                                    <div>
+                                        <P class="mb-0 product-title">{{ producto.product.codigo }}</P>
+                                        
+                                    </div>
+                                    </a>
+                                  </div>
+                              </td>  
+                              <td>{{ producto.count }}</td>
+                              <td>{{ producto.product.name }}</td>
+                              
+                              <td>{{ producto.product.sale_price }}</td>
+                             
+                              <td>
+                                <div class="table-actions d-flex align-items-center gap-3 fs-6">
+                                  <form action="{% url 'venta_app:carshop-update' producto.id %}" method="POST">{% csrf_token %}
+                                    <button style="all: unset; cursor: pointer;"><a href="javascript:;" class="text-alert" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Reducir"><i class="lni lni-minus"></i></a></button>
+                                  </form>
+                                  <form method="POST" action="{% url 'venta_app:carshop-delete' producto.id %}"" > {% csrf_token %}
+                                    <button type="button" style="all: unset; cursor: pointer;" "><a class="text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar"><i class="bi bi-trash-fill"></i></a></button>
+                                  </form>
+                                <div>
+                              </td>
+                          
+                          </tr>
+                          {% endfor %}
+                          
+                            
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end">
+                <form method="POST" action ="{% url 'venta_app:carshop-delete_all' %}" > {% csrf_token %}
+                  <button type="button" style="all: unset; cursor: pointer;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{u.id}}"><a class="text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete"><i class="bi bi-trash-fill"></i></a></button>
+                  <div class="modal fade" id="exampleModal{{u.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Esta Seguro?</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">que desea eliminar todos los productos de la venta?</div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                  <button type="submit" class="btn btn-primary">Si</button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                </form>
+              </div>
+              
+            </div>
+            
+            <div class="col-12 col-lg-4">
+              <div class="card border shadow-none bg-light radius-10">
+                <div class="card-body">
+                  <form class="row g-3">
+                    
+                   
+                   <div class="col-12">
+                    <div class="col">
+                      <div class="card radius-10 border-0 border-start border-tiffany border-3">
+                        <div class="card-body">
+                          <div class="d-flex align-items-center">
+                            <div class="">
+                              <p class="mb-1">Total a cobrar</p>
+                              <h4 class="mb-0 text-tiffany">{{total_cobrar}} Bs</h4>
+                            </div>
+                            <div class="ms-auto widget-icon bg-tiffany text-white">
+                              <i class="bi bi-bag-check-fill"></i>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                     </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="d-grid">
+                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3">Terminar Venta</button>
+                    </div>
+                  </div>
+                  </form>
+                    
+                    
+                </div>
+              </div>
+              
+        
+          </div>
+        </div><!--end row-->
+
+      </div>
+      <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <h5 class="modal-title ">Escanear código QR</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <video id="video" class="scanner-video"></video>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Terminar venta</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form action="{% url 'venta_app:venta-voucher' %}" class="grid-x grid-margin-x" method="POST">{% csrf_token %}
+                <div class="modal-body">
+                  <div class="cell medium-6">
+                    <label>Tipo de Pago:</label>
+                    <div class="input-group">
+                      <span class="input-group-label"><i class="fi-credit-card"></i></span>
+                      {{ form_voucher.type_payment }}
+                    </div>
+                    {% for error in form.type_payment.errors %}
+                      <p class="cell" style="color: red;">
+                        {{ error|escape }}
+                      </p>
+                    {% endfor %}
+                  </div>
+                  
+                  {{ form_voucher.descuento}}
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="cell success button">Pagar</button>
+                </div>
+              </form>
+          </div>
+      </div>
+  </div>
+  </div>
+
+
+  </div>
+  </div>
+
+
+  <form method="POST" action ="{% url 'venta_app:venta-anulate' pk=venta.id %}">
+    {% csrf_token %}
+    <button type="button" style="all: unset; cursor: pointer;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{venta.id}}">
+        <a class="text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar">
+            <i class="bi bi-trash-fill"></i>eliminar
+        </a>
+    </button>
+    <div class="modal fade" id="exampleModal{{venta.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Está Seguro?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card cell">
+                        <div class="card-divider">
+                            <h3>Monto: {{ venta.amount }}</h3>
+                        </div>
+                        <div class="card-section">
+                            <h4>ID: {{ venta.id }}</h4>
+                            <p>FECHA: {{ venta.date_sale }}</p>
+                            <p>CANTIDAD PRODUCTOS: {{ venta.count }}</p>
+                            <p>TIPO DE COMPROBANTE: {{ venta.get_type_invoce_display }}</p>
+                            <p>TIPO DE PAGO: {{ venta.get_type_payment_display }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Sí</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

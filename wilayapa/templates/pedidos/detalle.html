@@ -1,0 +1,295 @@
+
+
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<meta name="csrf-token" content="{{ csrf_token }}">
+<link href="{% static 'assets/plugins/select2/css/select2.min.css' %} " rel="stylesheet" />
+	<link href="{% static 'assets/plugins/select2/css/select2-bootstrap4.css' %} " rel="stylesheet" />
+<link href="{% static 'mis_css/ventas.css' %}" rel="stylesheet" />
+<!-- Estilos directamente en el HTML -->
+
+
+{% endblock css %}
+    
+{% block content %}
+
+
+<div class="row">
+    <div class="col-12 col-lg-7 d-flex">
+      <div class="card w-100">
+       <div class="card-header py-3">
+        
+         <div class="row g-3">
+  
+            <h2 class="font-weight-light text-center text-muted ">Detalles del Pedido</h2>
+            
+            
+            </div>
+            
+          
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th >COD</th>
+                  <th >Cantidad</th>
+                  <th >Nombres</th>
+                  <th >Precio (U/)</th>
+                  <th >Precio (C/)</th>
+                  
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {% for producto in productos_guardados %}
+                            
+                <tr>
+                    <td>
+                        <div class="orderlist">
+                        <a class="d-flex align-items-center gap-2" href="javascript:;">
+                          <div class="product-box">
+                            {% if producto.product.image %}
+                            <img src="{{ producto.product.image.url }}" class="rounded-circle" width="44" height="44" alt="Producto">
+                            {% else %}
+                                <img src="/static/assets/images/favicon-32x32.png" class="rounded-circle" width="44" height="44" alt="Producto por defecto">
+                            {% endif %}
+                            
+                          </div>
+                          <div>
+                              <P class="mb-0 product-title">{{ producto.product.codigo }}</P>
+                              
+                          </div>
+                          </a>
+                        </div>
+                    </td>  
+                    <td>{{ producto.count }}</td>
+                    <td>{{ producto.product.name }}
+
+                        {% if producto.extras.all %}
+                            <ul>
+                                {% for extra in producto.extras.all %}
+                                    <li>{{ extra.name }} (Bs. {{ extra.price }})</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No tiene extras</p>
+                        {% endif %}
+                    </td>
+                    
+                    <td>{{ producto.price_sale}}</td>
+                    <!-- Mostrar extras si existen -->
+                    <td>{{ producto.precio_total}}</td>
+                       
+                    
+                
+                </tr>
+                {% endfor %}
+                
+              </tbody>
+            </table>
+          </div>
+          
+          
+          
+        </div>
+              
+        
+                
+             
+      </div>
+      
+    </div>
+    <div class="col-12 col-lg-5 d-flex">
+      <div class="card w-100">
+      <form " class="terminar-pedido-form" > 
+        <div class="card-header py-3">
+          <h5 class="mb-0">Detalles del pedido</h5>
+          <div class="col-md-12 form-check form-switch ">
+            
+            {% if pedido.entregado %}
+                <label for="flexSwitchCheckDefault">Pedido Entregado</label>
+            {% endif %}
+            
+
+          </div>
+        </div>
+        <div class="card-body">
+          
+            <div class="row g-3">
+            <div class="col-12 col-lg-12">
+              <div class="col">
+                <div class="card radius-10 border-0 border-start border-tiffany border-3">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="">
+                        <p class="mb-1">MONTO TOTAL</p>
+                        <h4 class="mb-0 text-tiffany" id="total-cobrar" >{{ pedido.amount}} Bs</h4>
+                      </div>
+                      <div class="ms-auto widget-icon bg-tiffany text-white">
+                        <i class="bi bi-bag-check-fill"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-12 col-lg-6">
+                <label class="form-label">Metodo de Adelanto</label>
+                <p class="form-control">{{pedido.get_type_payment_display}}</p>
+                
+              </div>
+              
+              
+                
+              <div class="col-12 col-lg-6">
+                <label class="form-label">Metodo de saldo</label>
+                <p class="form-control">{{pedido.get_type_payment_saldo_display}}</p>
+                
+              </div>
+              <div class="col-12 col-lg-6">
+                <label class="form-label">Nombre</label>
+                <p class="form-control">{{pedido.cliente_nombre}}</p>
+                
+                
+              </div>
+              
+              
+              <div class="col-12 col-lg-6">
+                <label class="form-label">Celular</label>
+                <p class="form-control">{{pedido.cliente_celular}}</p>
+                
+                
+              </div>
+              <div class="col-12 col-lg-4">
+                <label class="form-label">Descuento</label>
+                <p class="form-control">{{pedido.descuento}}</p>
+              </div>
+              
+              <div class="col-12 col-lg-4">
+                <label class="form-label">Adelanto</label>
+                <p class="form-control">{{pedido.adelanto}}</p>
+              </div>
+              
+              <div class="col-12 col-lg-4">
+                <label class="form-label">Saldo</label>
+                <p class="form-control">{{pedido.saldo}}</p>
+              </div>
+            
+              <div class="col-12 col-lg-6">
+                <label class="form-label">Fecha De Inicio</label>
+                <p class="form-control">{{pedido.date_sale|date:"l d F Y"}}</p>
+                
+              </div>
+              
+              <div class="col-12 col-lg-6">
+                <label class="form-label">Fecha de entrega</label>
+                <p class="form-control">{{pedido.date_entrega|date:"l d F Y"}}</p>
+              </div>
+              <div class="col-12 col-lg-12">
+                <label class="form-label">Tipo de entrega</label>
+                <p class="form-control">{{pedido.get_type_entrega_display}}</p>
+              </div>
+              <div class="col-4 col-lg-4">
+                
+                <label class="form-label">Departamento</label>
+                <p class="form-control">{{ pedido.cliente_departamento }}</p>
+                
+                
+              </div>
+              <div class="col-4 col-lg-4">
+                    <label class="form-label">Carnet</label>
+                    <p class="form-control">{{ pedido.cliente_carnet }}</p>
+                </div>
+                <div class="col-4 col-lg-4">
+                    <label class="form-label">Sucursal</label>
+                    <p class="form-control">{{ pedido.cliente_sucursal }}</p>
+                </div>
+                <div class="col-12 col-lg-12">
+                    <label class="form-label">Direccion</label>
+                    
+                    <p class="form-control">{{pedido.cliente_direccion}}</p>
+                </div>
+              
+              <div class="col-12 col-lg-12">
+                <label class="form-label">Descripcion del pedido</label>
+                <textarea class="form-control">{{pedido.description}}</textarea>
+                
+              </div>
+              
+              
+            
+           
+           
+           
+          </div>
+          
+        </div>
+      </form>
+      </div>
+    </div>
+  </div><!--end row-->
+  
+  
+  
+  
+  
+  
+       
+       
+  
+  
+              
+              
+        
+
+  
+
+
+{% endblock content %}
+
+
+
+
+{% block js %}
+
+
+
+<script src="{% static 'mis_js/add_marca_extras.js' %} "></script>
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+<script src="{% static 'assets/plugins/select2/js/select2.min.js' %} "></script>
+  <script src="{% static 'assets/js/form-select2.js' %}"></script>
+
+{% endblock js %}
+    

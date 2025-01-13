@@ -1,0 +1,489 @@
+
+
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<meta name="csrf-token" content="{{ csrf_token }}">
+<link href="{% static 'assets/plugins/select2/css/select2.min.css' %} " rel="stylesheet" />
+	<link href="{% static 'assets/plugins/select2/css/select2-bootstrap4.css' %} " rel="stylesheet" />
+<link href="{% static 'mis_css/ventas.css' %}" rel="stylesheet" />
+<!-- Estilos directamente en el HTML -->
+<style>
+    /* Estilo inicial para el input (oculto) */
+    #custom-department {
+        display: none;
+    }
+</style>
+
+{% endblock css %}
+    
+{% block content %}
+
+
+<div class="row">
+    <div class="col-12 col-lg-7 d-flex">
+      <div class="card w-100">
+       <div class="card-header py-3">
+        
+         <div class="row g-3">
+  
+            <h2 class="font-weight-light text-center text-muted ">Nuevo Pedido</h2>
+            
+            
+            </div>
+            <hr/>
+          <form method="POST" id="form_add_prod">{% csrf_token %}
+            <div class="row g-3">
+       
+           <div class="col-lg-4 col-6 col-md-3">
+             <div class="ms-auto position-relative">
+               <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="lni lni-folder"></i></div>
+               {{ form.productId }}
+             </div>
+           </div>
+           <div class="col-lg-4 col-6 col-md-3">
+            <div class="ms-auto position-relative">
+              <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="lni lni-calculator"></i></div>
+              {{ form.count }}
+            </div>
+            
+              
+           </div>
+
+           
+           <div class="col-lg-4 col-md-2 me-auto d-flex justify-content-center">
+            <button type="submit" class="btn btn-outline-primary px-5 radius-30"><i class="lni lni-cart-full"></i>  Agregar</button>
+           </div>
+
+           <div class="col-12">
+            <label for="extra_select" class="form-label">Extras</label>
+            <select name="extra" id="extra_select" class="multiple-select" data-placeholder="Selecciona extras" multiple="multiple">
+                <!-- Los extras se cargarán aquí dinámicamente con JavaScript -->
+            </select>
+        </div>
+           
+         </div>
+         
+        </form>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th >COD</th>
+                  <th >Cantidad</th>
+                  <th >Nombres</th>
+                  <th >Precio (S/)</th>
+                  
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for producto in productos %}
+                            
+                <tr>
+                    <td>
+                        <div class="orderlist">
+                        <a class="d-flex align-items-center gap-2" href="javascript:;">
+                          <div class="product-box">
+                            {% if producto.product.image %}
+                            <img src="{{ producto.product.image.url }}" class="rounded-circle" width="44" height="44" alt="Producto">
+                            {% else %}
+                                <img src="/static/assets/images/favicon-32x32.png" class="rounded-circle" width="44" height="44" alt="Producto por defecto">
+                            {% endif %}
+                            
+                          </div>
+                          <div>
+                              <P class="mb-0 product-title">{{ producto.product.codigo }}</P>
+                              
+                          </div>
+                          </a>
+                        </div>
+                    </td>  
+                    <td>{{ producto.count }}</td>
+                    <td>{{ producto.product.name }}
+
+                        {% if producto.extras.all %}
+                            <ul>
+                                {% for extra in producto.extras.all %}
+                                    <li>{{ extra.name }} (Bs. {{ extra.price }})</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span>No tiene extras</span>
+                        {% endif %}
+                    </td>
+                    
+                    <td>{{ producto.precio_total }}</td>
+                    <!-- Mostrar extras si existen -->
+                    
+                    <td>
+                      <div class="table-actions d-flex align-items-center gap-3 fs-6">
+                        <form action="{% url 'pedidos_app:car-shop-update' producto.id %}" method="POST">{% csrf_token %}
+                          <button style="all: unset; cursor: pointer;"><a href="javascript:;" class="text-alert" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Reducir"><i class="lni lni-minus"></i></a></button>
+                        </form>
+                        <form method="POST" action="{% url 'pedidos_app:car-shop-delete' producto.id %}"" > {% csrf_token %}
+                          <button  style="all: unset; cursor: pointer;" "><a class="text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Eliminar"><i class="bi bi-trash-fill"></i></a></button>
+                        </form>
+                      <div>
+                    </td>
+                
+                </tr>
+                {% endfor %}
+                
+              </tbody>
+            </table>
+          </div>
+          <div class="">
+            <form method="POST" action ="{% url 'pedidos_app:car-shop-delete-all' %}" > {% csrf_token %}
+              <button type="button" style="all: unset; cursor: pointer;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{u.id}}"><a class="text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete"><i class="bi bi-trash-fill"></i></a></button>
+              <div class="modal fade" id="exampleModal{{u.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Eliminar Porductos del Carrito</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="alert border-0 border-danger border-start border-4 bg-light-danger alert-dismissible fade show">
+                            <div class="text-danger">Esta seguro de eliminar los productos del carrito?</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                              <button type="submit" class="btn btn-primary">Si</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </form>
+          </div>
+          
+          
+        </div>
+              
+        
+                
+             
+      </div>
+      
+    </div>
+    <div class="col-12 col-lg-5 d-flex">
+      <div class="card w-100">
+      <form method="POST" action="{% url 'pedidos_app:pedido-editar-guardar' pedido.id %} " class="terminar-pedido-form" id="terminar_pedido"> {% csrf_token %}
+        <div class="card-header py-3">
+          <h5 class="mb-0">Detalles del pedido</h5>
+          <div class="col-md-12 form-check form-switch ">
+            
+          {{datos_ped.entregado}}<label for="flexSwitchCheckDefault">Pedido Entregado</label>
+          </div>
+        </div>
+        <div class="card-body">
+          
+            <div class="row g-3">
+            <div class="col-12 col-lg-8">
+              <div class="col">
+                <div class="card radius-10 border-0 border-start border-tiffany border-3">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="">
+                        <p class="mb-1">Total a cobrar</p>
+                        <h4 class="mb-0 text-tiffany" id="total-cobrar" data-total="{{ total_cobrar }}">{{total_cobrar}} Bs</h4>
+                      </div>
+                      <div class="ms-auto widget-icon bg-tiffany text-white">
+                        <i class="bi bi-bag-check-fill"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-12 col-lg-4">
+                <label class="form-label">Metodo de Adelanto</label>
+                {{datos_ped.type_payment}}
+              </div>
+              <div class="col-12 col-lg-6">
+                <label class="form-label">Nombre</label>
+                {{ datos_ped.cliente_nombre }}
+                
+              </div>
+              
+              
+              <div class="col-12 col-lg-6">
+                <label class="form-label">Celular</label>
+                {{ datos_ped.cliente_celular }}
+              </div>
+              <div class="col-12 col-lg-4">
+                <label class="form-label">Descuento</label>
+                {{datos_ped.descuento}}
+              </div>
+              
+              <div class="col-12 col-lg-4">
+                <label class="form-label">Adelanto</label>
+                {{datos_ped.adelanto}}
+              </div>
+              
+              <div class="col-12 col-lg-4">
+                <label class="form-label">Saldo</label>
+                {{datos_ped.saldo}}
+              </div>
+            
+              <div class="col-12 col-lg-6">
+                <label class="form-label">Fecha De Inicio</label>
+                {{datos_ped.fecha_inicio}}
+                
+              </div>
+              
+              <div class="col-12 col-lg-6">
+                <label class="form-label">Fecha de entrega</label>
+                {{datos_ped.fecha_entrega}}
+              </div>
+              
+              <div class="col-12">
+                <label class="form-label">Tipo de entrega</label>
+                
+          
+            
+                {{datos_ped.type_entrega}}
+                <div class="tab-content py-3">
+                    
+                        
+                        <!-- Sección En tienda -->
+                        <div class="card-body tab-pane fade " id="primaryhome" role="tabpanel">
+                          <div class="row g-2">
+                              <div class="col-4 col-lg-4">
+                                  <div class="mb-3 select2-sm">
+                                      <label class="form-label">Departamento</label>
+                                      {{ datos_ped.departamento }}
+                                  </div>
+                              </div>
+                              <div class="col-4 col-lg-4">
+                                  <label class="form-label">Carnet</label>
+                                  {{ datos_ped.carnet }}
+                              </div>
+                              <div class="col-4 col-lg-4">
+                                  <label class="form-label">Sucursal</label>
+                                  {{ datos_ped.sucursal }}
+                              </div>
+                              <div class="col-12 col-lg-12"  id="custom-department-container" style="display: none;" >
+                                <label for="custom-department">Departamento personalizado</label>
+                                  {{ datos_ped.custom_department }}
+                              </div>
+                              <div class="col-12 col-lg-12">
+                                  <label class="form-label">Direccion</label>
+                                  {{ datos_ped.direccionEnvio }}
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Sección Envio -->
+                      <div class="card-body tab-pane fade " id="primaryprofile" role="tabpanel">
+                          <div class="row g-2">
+                              <div class="col-12 col-lg-12">
+                                  <label class="form-label">Direccion</label>
+                                  {{ datos_ped.direccion }}
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Sección Delivery -->
+                      <div class="card-body tab-pane fade " id="primarycontact" role="tabpanel">
+                          
+                      </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-12">
+                <label class="form-label">Descripcion del pedido</label>
+                {{datos_ped.description}}
+              </div>
+              
+              
+            
+           
+           <div class="col-12">
+             <div class="d-grid">
+                <button type="submit" class="btn btn-primary" id="submitButton"><svg xmlns="http://www.w3.org/2000/svg" 
+                width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                class="feather feather-shopping-cart">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg> Guardar Pedido</button>
+             </div>
+           </div>
+           
+          </div>
+          
+        </div>
+      </form>
+      </div>
+    </div>
+  </div><!--end row-->
+  
+  
+  
+  
+  
+  
+       
+       
+  
+  
+              
+              
+        
+
+      
+  
+  <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Terminar venta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'venta_app:venta-voucher' %}" class="grid-x grid-margin-x" method="POST">{% csrf_token %}
+              <div class="modal-body">
+                <div class="cell medium-6">
+                  <div class="card-body">
+                    <div class="input-group mb-3">
+                      <label class="input-group-text" for="inputGroupSelect01">Tipo de Pago</label>
+                      {{ form_voucher.type_payment }}
+                    </div>
+                  </div>
+                  
+                  
+                  <label></label>
+  
+                  <div class="card-body">
+                    <div class="input-group mb-3"> <span class="input-group-text">$</span>
+                      <span class="input-group-text">Descuento</span>
+                      {{ form_voucher.descuento}}
+                      
+                    </div>
+                    {% for error in form.type_payment.errors %}
+                      <p class="cell" style="color: red;">
+                        {{ error|escape }}
+                      </p>
+                    {% endfor %}
+                    
+                  </div>
+                 
+                
+                
+  
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div class="col-12">
+                  <div class="d-grid">
+                   <button type="submit" class="btn btn-lg btn-success px-5"><i class="bi bi-currency-dollar fs-3"></i> Pagar</button>
+                  </div>
+                </div>
+              </div>
+              
+            </form>
+            <!-- Botones para cuando la imagen ya existe -->
+            
+        </div>
+    </div>
+  </div>
+  <input type="hidden" id="productos-cargados" value="{{ productos_cargados }}">
+  
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const productSelect = document.getElementById('id_productId');  // Asegúrate de que el id esté correctamente definido
+    const extraSelect = document.getElementById('extra_select');  // Asegúrate de que este id sea el correcto
+
+    // Obtener los productos con extras desde el contexto de Django
+    const productosConExtras = JSON.parse('{{ productos_con_extras | escapejs }}');
+    console.log("Productos con Extras:", productosConExtras);  // Verificar en la consola
+
+    // Función para cargar los extras según el producto seleccionado
+    function cargarExtras() {
+        const productId = productSelect.value;
+        console.log('Producto seleccionado:', productId);  // Verificar que el producto esté seleccionado
+
+        // Si no se ha seleccionado un producto, limpiar los extras
+        if (!productId) {
+            extraSelect.innerHTML = '';  // Limpiar los extras
+            return;
+        }
+
+        // Verificar si el producto tiene extras
+        if (productosConExtras[productId]) {
+            const extras = productosConExtras[productId];
+            console.log('Extras disponibles para el producto seleccionado:', extras);  // Verificar los extras disponibles para el producto seleccionado
+
+            // Limpiar los extras actuales
+            extraSelect.innerHTML = '';
+
+            // Agregar los extras correspondientes
+            extras.forEach(extra => {
+                const option = document.createElement('option');
+                option.value = extra.id;  // El value debe ser el ID del extra
+                option.textContent = `${extra.price} Bs - ${extra.name}`;
+                extraSelect.appendChild(option);
+            });
+        } else {
+            console.log('No hay extras para este producto.');
+            extraSelect.innerHTML = '';  // Limpiar si no hay extras
+        }
+    }
+
+    // Detectar cuando el producto cambie
+    productSelect.addEventListener('change', cargarExtras);
+    
+    // Llamar a la función para cargar los extras al cargar la página (si ya hay un producto seleccionado)
+    cargarExtras();
+});
+
+
+</script>
+
+{% endblock content %}
+
+
+
+
+{% block js %}
+<script src="{% static 'mis_js/localStorage2.js' %} "></script>
+
+
+<script src="{% static 'mis_js/add_marca_extras.js' %} "></script>
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+<script src="{% static 'assets/plugins/select2/js/select2.min.js' %} "></script>
+  <script src="{% static 'assets/js/form-select2.js' %}"></script>
+
+{% endblock js %}
+    

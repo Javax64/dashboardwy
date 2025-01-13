@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% load  static %}
+
+
+{% block title %}
+    register - Wilayapa
+{% endblock title %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'assets/plugins/notifications/css/lobibox.min.css' %} " />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.css' %} " rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.time.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/plugins/datetimepicker/css/classic.date.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="{% static 'assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+{% endblock css %}
+    
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+      <div class="d-flex align-items-center">
+         <h5 class="mb-0">Customer Details</h5>
+          <form class="ms-auto position-relative">
+            <div class="position-absolute top-50 translate-middle-y search-icon px-3"><i class="bi bi-search"></i></div>
+            <input class="form-control ps-5" type="text" placeholder="search">
+          </form>
+      </div>
+      <div class="table-responsive mt-3">
+        <table class="table align-middle">
+          <thead class="table-secondary">
+            <tr>
+             <th>#</th>
+             <th>Usuario</th>
+             <th>Ocupacion</th>
+             <th>Activo</th>
+             <th>Nmbre</th>
+             
+             <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in usuarios  %}
+            <tr>
+            
+            
+                
+            
+                
+             <td>{{ u.id}}</td>
+              <td>
+                <div class="d-flex align-items-center gap-3 cursor-pointer">
+                    {% if u.is_active %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-x"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="18" y1="8" x2="23" y2="13"></line><line x1="23" y1="8" x2="18" y2="13"></line></svg>
+                    {% endif %}
+                    <div class="">
+                     <p class="mb-0">{{u.username}}</p>
+                   </div>
+                </div>
+              </td>
+              <td>{{u.get_ocupation_display}}</td>
+              <td>
+                {% if u.is_active %}
+                  <span class="badge bg-light-success text-success w-100">Activo</span>
+                {% else %}
+                <span class="badge bg-light-danger text-danger w-100">Inactivo</span>
+                {% endif %}
+              </td>
+              <td>{{u.full_name}}</td>
+              
+              <td>
+                <div class="table-actions d-flex align-items-center gap-3 fs-6">
+                <form method="POST" action ="{% url 'users_app:user-update_password' u.id%}" > {% csrf_token %}
+                        <button style="all: unset; cursor: pointer;"><a href="javascript:;" class="text-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit"><i class="lni lni-lock"></i></a></button>
+                      </form>
+                  <form method="POST" action ="{% url 'users_app:user-update' u.id%}" > {% csrf_token %}
+                    <button style="all: unset; cursor: pointer;"><a href="javascript:;" class="text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit"><i class="bi bi-pencil-fill"></i></a></button>
+                  </form>
+                  
+                  <form method="POST" action ="{% url 'users_app:user-delete' u.id%}" > {% csrf_token %}
+                    <button type="button" style="all: unset; cursor: pointer;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{u.id}}"><a class="text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete"><i class="bi bi-trash-fill"></i></a></button>
+                    <div class="modal fade" id="exampleModal{{u.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Esta Seguro?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">Desea elliminar a {{u.full_name}}</div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-primary">Si</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </form>
+                  
+                </div>
+              </td>
+             
+            </tr>
+            
+            {% endfor %}
+          </tbody>
+        </table>
+        <!-- Modal -->
+        
+        <!-- Modal -->
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+
+{% block js %}
+
+<script src="{% static 'assets/plugins/datetimepicker/js/legacy.js' %} "></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.time.js' %}"></script>
+<script src="{% static 'assets/plugins/datetimepicker/js/picker.date.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js' %}"></script>
+<script src="{% static 'assets/js/form-date-time-pickes.js' %}"></script>
+
+<!--notification js -->
+<script src="{% static 'assets/plugins/notifications/js/lobibox.min.js' %} "></script>
+<script src="{% static 'assets/plugins/notifications/js/notifications.min.js' %}"></script>
+<script src="{% static 'assets/plugins/notifications/js/notification-custom-script.js' %}"></script>
+<script src="{% static 'assets/js/pace.min.js' %}"></script>
+
+{% endblock js %}
+    
